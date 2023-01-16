@@ -3,12 +3,22 @@ package com.example.trail.controller;
 import com.example.trail.entity.User;
 import com.example.trail.repository.UserRepo;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-
+@Validated
 @RestController
 public class UserController {
     @Autowired
     private UserRepo userRepo;
+
+    @GetMapping("/getContactById/{id}")
+    public String getContactById(@PathVariable int id) {
+        String result;
+         result=userRepo.findById(id).get().getContactInfo().getEmail();
+         System.out.println(result);
+        return result;
+
+    }
 
     @PostMapping("/addUser")
     public String addUser(@RequestBody User user){
