@@ -3,12 +3,18 @@ package com.example.trail.controller;
 import com.example.trail.entity.User;
 import com.example.trail.repository.UserRepo;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-@Validated
+import javax.validation.Valid;
+//import javax.validation.Valid;
+
+//@Validated
 @RestController
 public class UserController {
-    @Autowired
+    //@Autowired
     private UserRepo userRepo;
 
     @GetMapping("/getContactById/{id}")
@@ -21,9 +27,16 @@ public class UserController {
     }
 
     @PostMapping("/addUser")
-    public String addUser(@RequestBody User user){
-        userRepo.save(user);
-        return "user added successfully";
+    @ResponseBody
+    public ResponseEntity<Object>  addUser(@RequestBody @Valid User user, BindingResult result){
+        if(result.hasErrors()) {
+            //return new ResponseEntity<>(result.getAllErrors(), HttpStatus.BAD_REQUEST);
+            return ResponseEntity.badRequest().body("");
+        }
+        else {
+            //userRepo.save(user);
+            return ResponseEntity.ok("saved");
+        }
     }
     @DeleteMapping("/{id}")
     public String userDelete( @PathVariable int id){
